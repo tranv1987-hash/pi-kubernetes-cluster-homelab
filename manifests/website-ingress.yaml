@@ -1,0 +1,20 @@
+# manifests/website-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: project-site-ingress
+  annotations:
+    # Use the ingress-nginx controller
+    kubernetes.io/ingress.class: "nginx" 
+spec:
+  rules:
+  - host: "my.portfolio.site"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: project-site-service
+            port:
+              number: 80
