@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-site-deployment
+  labels:
+    app: project-site
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-site
+  template:
+    metadata:
+      labels:
+        app: project-site
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:stable-alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html/
+      volumes:
+      - name: html-volume
+        configMap:
+          name: project-site-html
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: project-site-service
+spec:
+  type: NodePort
+  selector:
+    app: project-site
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
